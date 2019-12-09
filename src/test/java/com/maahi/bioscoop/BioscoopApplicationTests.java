@@ -22,6 +22,6 @@ class BioscoopApplicationTests {
 	public void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
 		List<Film> films = filmService.getAllFilms();
 
-		Assertions.assertEquals(films.size(), 3);
+		Assertions.assertEquals(films.size(), 0);
 	}
 }
