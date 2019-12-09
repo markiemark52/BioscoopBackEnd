@@ -1,4 +1,5 @@
 language: java
 sudo: false
-jdk: -openjdk11
+jdk:
+  -oraclejdk11
 script: mvn clean verify
