@@ -1,3 +1,0 @@
--- INSERT INTO Film VALUES(0, 'Film 1');
--- -- INSERT INTO Film VALUES(1, 'Film 2');
--- -- INSERT INTO Film VALUES(2, 'Film 3');
