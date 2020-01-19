@@ -1,6 +1,8 @@
 package com.maahi.bioscoop.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "film")
@@ -18,6 +20,9 @@ public class Film {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany(mappedBy = "films")
+    private Set<Auditorium> auditoriums = new HashSet<>();
 
     public Film() { }
 
