@@ -21,8 +21,11 @@ public class Film {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(mappedBy = "films")
-    private Set<Auditorium> auditoriums = new HashSet<>();
+//    @ManyToMany(mappedBy = "films")
+//    private Set<Auditorium> auditoriums = new HashSet<>();
+
+    @OneToMany(mappedBy = "film")
+    private Set<AuditoriumFilm> auditoriumFilms = new HashSet<>();
 
     public Film() { }
 
@@ -45,5 +48,15 @@ public class Film {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    private Set<AuditoriumFilm> getAuditoriumFilms() {
+        return this.auditoriumFilms;
+    }
+    public void setAuditoriumFilms(Set<AuditoriumFilm> auditoriumFilms) {
+        this.auditoriumFilms = auditoriumFilms;
+    }
+    public void addAuditoriumFilm(AuditoriumFilm auditoriumFilm) {
+        this.auditoriumFilms.add(auditoriumFilm);
     }
 }

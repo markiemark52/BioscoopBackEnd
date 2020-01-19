@@ -23,5 +23,6 @@
         <mapping class="com.maahi.bioscoop.entities.Film" />
         <mapping class="com.maahi.bioscoop.entities.User" />
         <mapping class="com.maahi.bioscoop.entities.Auditorium" />
+        <mapping class="com.maahi.bioscoop.entities.AuditoriumFilm" />
     </session-factory>
 </hibernate-configuration>

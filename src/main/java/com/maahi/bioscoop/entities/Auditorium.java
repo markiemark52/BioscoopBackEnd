@@ -18,13 +18,16 @@ public class Auditorium {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "Auditorium_Film",
-            joinColumns = {@JoinColumn(name = "auditorium_id")},
-            inverseJoinColumns = {@JoinColumn(name = "film_id")}
-    )
-    Set<Film> films = new HashSet<>();
+//    @ManyToMany(cascade = {CascadeType.ALL})
+//    @JoinTable(
+//            name = "Auditorium_Film",
+//            joinColumns = {@JoinColumn(name = "auditorium_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "film_id")}
+//    )
+//    Set<Film> films = new HashSet<>();
+
+    @OneToMany(mappedBy = "auditorium")
+    private Set<AuditoriumFilm> auditoriumFilms = new HashSet<>();
 
     public Auditorium() {
     }
@@ -44,5 +47,15 @@ public class Auditorium {
 
     public String getDescription() {
         return this.description;
+    }
+
+    private Set<AuditoriumFilm> getAuditoriumFilms() {
+        return this.auditoriumFilms;
+    }
+    public void setAuditoriumFilms(Set<AuditoriumFilm> auditoriumFilms) {
+        this.auditoriumFilms = auditoriumFilms;
+    }
+    public void addAuditoriumFilm(AuditoriumFilm auditoriumFilm) {
+        this.auditoriumFilms.add(auditoriumFilm);
     }
 }
