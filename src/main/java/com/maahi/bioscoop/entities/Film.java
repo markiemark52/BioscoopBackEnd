@@ -21,9 +21,6 @@ public class Film {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToMany(mappedBy = "films")
-//    private Set<Auditorium> auditoriums = new HashSet<>();
-
     @OneToMany(mappedBy = "film")
     private Set<AuditoriumFilm> auditoriumFilms = new HashSet<>();
 

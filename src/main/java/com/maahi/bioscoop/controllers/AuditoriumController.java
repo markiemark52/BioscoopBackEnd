@@ -19,22 +19,19 @@ import java.util.List;
 public class AuditoriumController {
     public AuditoriumController() { }
 
-//    @PostMapping("/add")
-//    public ResponseEntity<Auditorium> addAuditorium(@RequestBody Auditorium auditorium) {
-//        Transaction transaction = null;
-//        try(Session session = HibernateUtil.getSessionFactory().openSession()){
-//            transaction = session.beginTransaction();
-//            session.save(auditorium);
-//            transaction.commit();
-//            return ResponseEntity.ok(auditorium);
-//        } catch(Exception e){
-//            if(transaction != null){
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
+    @GetMapping("/id")
+    public ResponseEntity<List<Auditorium>> getAuditoriumById(@RequestParam int id) {
+        List<Auditorium> auditoriums;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            auditoriums = session.createQuery("from Auditorium a where a.id = :id", Auditorium.class)
+                    .setParameter("id", id)
+                    .list();
+            return ResponseEntity.ok(auditoriums);
+        } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Auditorium>> getAllAuditoriums() {
@@ -90,6 +87,32 @@ public class AuditoriumController {
 
             for(AuditoriumFilm aF : auditoriumFilms) {
                 Showtime showtime = new Showtime();
+                showtime.film = aF.getFilm().getTitle();
+                showtime.auditorium = aF.getAuditorium().getName();
+                showtime.datetime = aF.getTime();
+
+                showtimes.add(showtime);
+            }
+
+            return ResponseEntity.ok(showtimes);
+        } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/ashowtimes")
+    public ResponseEntity<List<Showtime>> getShowtimesByAuditoriumId(@RequestParam int auditoriumId) {
+        List<AuditoriumFilm> auditoriumFilms;
+        List<Showtime> showtimes = new ArrayList<>();
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            auditoriumFilms = session.createQuery("from AuditoriumFilm where auditorium.id = :auditoriumId", AuditoriumFilm.class)
+                    .setParameter("auditoriumId", auditoriumId)
+                    .list();
+
+            for(AuditoriumFilm aF : auditoriumFilms) {
+                Showtime showtime = new Showtime();
+                showtime.film = aF.getFilm().getTitle();
                 showtime.auditorium = aF.getAuditorium().getName();
                 showtime.datetime = aF.getTime();
 
