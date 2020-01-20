@@ -1,5 +1,6 @@
 package com.maahi.bioscoop;
 
+import com.maahi.bioscoop.entities.Auditorium;
 import com.maahi.bioscoop.entities.Film;
 import com.maahi.bioscoop.entities.User;
 import org.hibernate.Session;
@@ -24,6 +25,10 @@ public class BioscoopApplication {
 		film1.setUser(user);
 		Film film2 = new Film("Film Two", "The Second Film");
 		film2.setUser(user);
+
+		Auditorium auditorium1 = new Auditorium("Auditorium 1", "The First Auditorium");
+		Auditorium auditorium2 = new Auditorium("Auditorium 2", "The Second Auditorium");
+
 		Transaction transaction = null;
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			// start a transaction
@@ -32,6 +37,8 @@ public class BioscoopApplication {
 			session.save(user);
 			session.save(film1);
 			session.save(film2);
+			session.save(auditorium1);
+			session.save(auditorium2);
 			// commit transaction
 			transaction.commit();
 		} catch (Exception e) {

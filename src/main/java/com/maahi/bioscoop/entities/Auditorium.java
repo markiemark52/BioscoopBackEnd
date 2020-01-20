@@ -5,29 +5,35 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "film")
-public class Film {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "Auditorium")
+public class Auditorium {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToMany(cascade = {CascadeType.ALL})
+//    @JoinTable(
+//            name = "Auditorium_Film",
+//            joinColumns = {@JoinColumn(name = "auditorium_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "film_id")}
+//    )
+//    Set<Film> films = new HashSet<>();
 
-    @OneToMany(mappedBy = "film")
+    @OneToMany(mappedBy = "auditorium")
     private Set<AuditoriumFilm> auditoriumFilms = new HashSet<>();
 
-    public Film() { }
+    public Auditorium() {
+    }
 
-    public Film(String title, String description) {
-        this.title = title;
+    public Auditorium(String name, String description) {
+        this.name = name;
         this.description = description;
     }
 
@@ -35,16 +41,12 @@ public class Film {
         return this.id;
     }
 
-    public String getTitle() {
-        return this.title;
+    public String getName() {
+        return this.name;
     }
 
     public String getDescription() {
         return this.description;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     private Set<AuditoriumFilm> getAuditoriumFilms() {

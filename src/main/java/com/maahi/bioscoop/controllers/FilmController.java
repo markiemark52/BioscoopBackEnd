@@ -1,12 +1,15 @@
 package com.maahi.bioscoop.controllers;
 
 import com.maahi.bioscoop.HibernateUtil;
+import com.maahi.bioscoop.datamodels.FilmModel;
 import com.maahi.bioscoop.entities.Film;
+import com.maahi.bioscoop.entities.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,9 +19,15 @@ public class FilmController {
     public FilmController() { }
 
     @PostMapping("/add")
-    public ResponseEntity<Film> addFilm(@RequestBody Film film) {
+    public ResponseEntity<Film> addFilm(@RequestBody FilmModel filmModel) {
+        Film film = new Film(filmModel.title, filmModel.description);
+
         Transaction transaction = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            User user = session.createQuery("from User u where u.email = :email", User.class)
+                    .setParameter("email", filmModel.email).getSingleResult();
+            film.setUser(user);
+
             transaction = session.beginTransaction();
             session.save(film);
             transaction.commit();
@@ -53,6 +62,22 @@ public class FilmController {
                     .setParameter("email", email)
                     .list();
             return ResponseEntity.ok(films);
+        } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<List<Film>> getFilmById(@RequestParam int id) {
+        List<Film> film = new ArrayList<>();
+
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            film = session.createQuery("from Film f where f.id = :id", Film.class)
+                    .setParameter("id", id)
+                    .list();
+
+            return ResponseEntity.ok(film);
         } catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.notFound().build();
