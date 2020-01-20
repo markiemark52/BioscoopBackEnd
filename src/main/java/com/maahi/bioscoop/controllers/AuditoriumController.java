@@ -1,6 +1,7 @@
 package com.maahi.bioscoop.controllers;
 
 import com.maahi.bioscoop.HibernateUtil;
+import com.maahi.bioscoop.datamodels.Showtime;
 import com.maahi.bioscoop.entities.Auditorium;
 import com.maahi.bioscoop.entities.AuditoriumFilm;
 import com.maahi.bioscoop.entities.Film;
@@ -9,6 +10,7 @@ import org.hibernate.Transaction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -77,18 +79,27 @@ public class AuditoriumController {
         }
     }
 
-//    @GetMapping("")
-//    public ResponseEntity<List<Auditorium>> getAuditoriumsByFilm(@RequestParam String title) {
-//        System.out.println("Test");
-//        List<Auditorium> auditoriums;
-//        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            auditoriums = session.createQuery("from Film where user in(select id from User u where email = :email)", Auditorium.class)
-//                    .setParameter("email", title)
-//                    .list();
-//            return ResponseEntity.ok(auditoriums);
-//        } catch(Exception e){
-//            e.printStackTrace();
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @GetMapping("/showtimes")
+    public ResponseEntity<List<Showtime>> getShowtimesByFilmId(@RequestParam int filmId) {
+        List<AuditoriumFilm> auditoriumFilms;
+        List<Showtime> showtimes = new ArrayList<>();
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            auditoriumFilms = session.createQuery("from AuditoriumFilm where film.id = :filmId", AuditoriumFilm.class)
+                    .setParameter("filmId", filmId)
+                    .list();
+
+            for(AuditoriumFilm aF : auditoriumFilms) {
+                Showtime showtime = new Showtime();
+                showtime.auditorium = aF.getAuditorium().getName();
+                showtime.datetime = aF.getTime();
+
+                showtimes.add(showtime);
+            }
+
+            return ResponseEntity.ok(showtimes);
+        } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

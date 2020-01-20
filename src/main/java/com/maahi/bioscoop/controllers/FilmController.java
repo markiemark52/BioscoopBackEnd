@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,6 +54,22 @@ public class FilmController {
                     .setParameter("email", email)
                     .list();
             return ResponseEntity.ok(films);
+        } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<List<Film>> getFilmById(@RequestParam int id) {
+        List<Film> film = new ArrayList<>();
+
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            film = session.createQuery("from Film f where f.id = :id", Film.class)
+                    .setParameter("id", id)
+                    .list();
+
+            return ResponseEntity.ok(film);
         } catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.notFound().build();
